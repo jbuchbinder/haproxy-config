@@ -5,10 +5,8 @@ HAproxy configuration.
 
 ## BUILDING
 
-`
-go get github.com/gorilla/mux
-go build
-`
+	go get github.com/gorilla/mux
+	go build
 
 ## BUILD STATUS
 
