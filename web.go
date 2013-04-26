@@ -15,6 +15,7 @@ var (
 	bind                = flag.String("bind", ":8888", "Port/IP for binding interface")
 	haproxyBinary       = flag.String("haproxyBinary", "/usr/sbin/haproxy", "Path to haproxy binary")
 	haproxyConfigFile   = flag.String("haproxyConfig", "/etc/haproxy.cfg", "Configuration file for haproxy")
+	haproxyPidFile      = flag.String("haproxyPidFile", "/var/run/haproxy.pid", "Location of haproxy PID file")
 	haproxyTemplateFile = flag.String("template", "haproxy.cfg.template", "Template file to build haproxy config")
 	ConfigObj           Config
 )
@@ -47,6 +48,17 @@ func main() {
 
 // On configuration change, call this to reload config
 func configChangeHook() {
+	err := RenderConfig(*haproxyConfigFile, *haproxyTemplateFile, &ConfigObj)
+	if err != nil {
+		log.Print("Error rendering config file")
+		return
+	}
+
+	err = HaproxyReload(*haproxyBinary, *haproxyConfigFile, *haproxyPidFile)
+	if err != nil {
+		log.Print("Error rendering config file")
+		return
+	}
 }
 
 // Main config object
