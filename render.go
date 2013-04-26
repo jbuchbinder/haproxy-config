@@ -7,10 +7,6 @@ import (
 )
 
 func RenderConfig(outFile string, templateFile string, config *Config) error {
-	//configMap := map[string]interface{}{
-	//	"config": config,
-	//}
-
 	f,err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return err
