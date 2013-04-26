@@ -13,6 +13,7 @@ import (
 
 var (
 	bind                = flag.String("bind", ":8888", "Port/IP for binding interface")
+	haproxyBinary       = flag.String("haproxyBinary", "/usr/sbin/haproxy", "Path to haproxy binary")
 	haproxyConfigFile   = flag.String("haproxyConfig", "/etc/haproxy.cfg", "Configuration file for haproxy")
 	haproxyTemplateFile = flag.String("template", "haproxy.cfg.template", "Template file to build haproxy config")
 	ConfigObj           Config

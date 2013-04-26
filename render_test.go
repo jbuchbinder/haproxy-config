@@ -5,7 +5,7 @@ import (
 )
 
 func TestRenderConfig(t *testing.T) {
-	outFile := "test"
+	outFile := "test.render"
 	template := "haproxy.cfg.template"
 	config := &Config{
 		Backends: map[string]*Backend{
@@ -13,11 +13,11 @@ func TestRenderConfig(t *testing.T) {
 				Name: "a",
 				BackendServers: map[string]*BackendServer{
 					"x": &BackendServer{
-						Name: "serverX",
-						Bind: "10.0.1.11:8080",
-						Weight: 1,
-						MaxConn: 1000,
-						Check: true,
+						Name:          "serverX",
+						Bind:          "10.0.1.11:8080",
+						Weight:        1,
+						MaxConn:       1000,
+						Check:         true,
 						CheckInterval: 1000,
 					},
 				},

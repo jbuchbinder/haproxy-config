@@ -7,13 +7,19 @@ import (
 )
 
 func RenderConfig(outFile string, templateFile string, config *Config) error {
-	f,err := ioutil.ReadFile(templateFile)
+	f, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return err
 	}
 
+	fp, err := os.OpenFile(outFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		return err
+	}
+	defer fp.Close()
+
 	t := template.Must(template.New("haproxy.cfg.template").Parse(string(f)))
-	err = t.Execute(os.Stdout, &config)
+	err = t.Execute(fp, &config)
 	if err != nil {
 		return err
 	}
