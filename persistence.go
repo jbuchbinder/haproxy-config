@@ -10,6 +10,8 @@ var (
 
 type PersistenceLayer interface {
 	Configure(c string) error
+	GetConfig() (*Config, error)
+	SetConfig(c *Config) error
 }
 
 // Resolves PersistenceLayer objects based on their string names.
