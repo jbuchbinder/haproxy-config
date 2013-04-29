@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sync"
 	"testing"
 )
 
@@ -23,6 +24,7 @@ func TestRenderConfig(t *testing.T) {
 				},
 			},
 		},
+		Mutex: new(sync.RWMutex),
 	}
 	err := RenderConfig(outFile, template, config)
 	if err != nil {

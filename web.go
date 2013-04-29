@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log/syslog"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -23,6 +24,11 @@ var (
 
 func main() {
 	flag.Parse()
+
+	ConfigObj = Config{
+		Mutex: new(sync.RWMutex),
+	}
+
 	r := mux.NewRouter()
 
 	// Define paths
