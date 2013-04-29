@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
 	"net"
 	"os/exec"
 )
@@ -22,12 +23,20 @@ func HaproxyCtl(socket string, command []byte) error {
 
 // Configuration reload
 func HaproxyReload(binary, config, pidfile string) error {
-	// Read pid
-	pid := ""
-	cmd := exec.Command(binary, "-f", config, "-p", pidfile, "-sf", pid)
+	pid, err := ioutil.ReadFile(pidfile)
+	args := make([]string, 1)
+	args = append(args, "-f")
+	args = append(args, config)
+	args = append(args, "-p")
+	args = append(args, pidfile)
+	if pid != nil {
+		args = append(args, "-sf")
+		args = append(args, string(pid))
+	}
+	cmd := exec.Command(binary, args...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		log.Err(err.Error())
 		return err
