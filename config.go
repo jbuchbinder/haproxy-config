@@ -1,9 +1,14 @@
 package main
 
+import (
+	"sync"
+)
+
 // Main configuration object. This contains all variables and is passed to
 // the templating engine.
 type Config struct {
 	Backends map[string]*Backend `json:"backends"`
+	Mutex    *sync.RWMutex
 }
 
 // Defines a single haproxy "backend".

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"log"
 	"net"
 	"os/exec"
 )
@@ -30,9 +29,9 @@ func HaproxyReload(binary, config, pidfile string) error {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Print(err)
+		log.Err(err.Error())
 		return err
 	}
-	log.Print("HaproxyReload: " + out.String())
+	log.Info("HaproxyReload: " + out.String())
 	return nil
 }

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
+	"log/syslog"
 	"net/http"
 	"time"
 )
@@ -18,6 +18,7 @@ var (
 	haproxyPidFile      = flag.String("haproxyPidFile", "/var/run/haproxy.pid", "Location of haproxy PID file")
 	haproxyTemplateFile = flag.String("template", "haproxy.cfg.template", "Template file to build haproxy config")
 	ConfigObj           Config
+	log, _              = syslog.New(syslog.LOG_DEBUG, "haproxy-config")
 )
 
 func main() {
@@ -43,20 +44,20 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	http.Handle("/", r)
-	log.Fatal(s.ListenAndServe())
+	log.Err(s.ListenAndServe().Error())
 }
 
 // On configuration change, call this to reload config
 func configChangeHook() {
 	err := RenderConfig(*haproxyConfigFile, *haproxyTemplateFile, &ConfigObj)
 	if err != nil {
-		log.Print("Error rendering config file")
+		log.Err("Error rendering config file")
 		return
 	}
 
 	err = HaproxyReload(*haproxyBinary, *haproxyConfigFile, *haproxyPidFile)
 	if err != nil {
-		log.Print("Error rendering config file")
+		log.Err("Error rendering config file")
 		return
 	}
 }
@@ -76,6 +77,8 @@ func configHandler(w http.ResponseWriter, r *http.Request) {
 // Backend functions
 
 func backendHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.RLock()
+	defer ConfigObj.Mutex.RUnlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]
@@ -92,6 +95,8 @@ func backendHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func backendAddHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.Lock()
+	defer ConfigObj.Mutex.Unlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]
@@ -119,6 +124,8 @@ func backendAddHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func backendDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.Lock()
+	defer ConfigObj.Mutex.Unlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]
@@ -135,6 +142,8 @@ func backendDeleteHandler(w http.ResponseWriter, r *http.Request) {
 // Backend server functions
 
 func backendServerHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.RLock()
+	defer ConfigObj.Mutex.RUnlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]
@@ -151,6 +160,8 @@ func backendServerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func backendServerAddHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.Lock()
+	defer ConfigObj.Mutex.Unlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]
@@ -184,6 +195,8 @@ func backendServerAddHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func backendServerDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	ConfigObj.Mutex.Lock()
+	defer ConfigObj.Mutex.Unlock()
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	backend := vars["backend"]

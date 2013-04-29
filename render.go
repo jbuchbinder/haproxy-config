@@ -18,6 +18,8 @@ func RenderConfig(outFile string, templateFile string, config *Config) error {
 	}
 	defer fp.Close()
 
+	config.Mutex.RLock()
+	defer config.Mutex.RUnlock()
 	t := template.Must(template.New("haproxy.cfg.template").Parse(string(f)))
 	err = t.Execute(fp, &config)
 	if err != nil {
