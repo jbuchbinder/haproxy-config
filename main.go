@@ -65,6 +65,9 @@ func main() {
 
 // On configuration change, call this to reload config
 func configChangeHook() {
+	// Attempt to serialize back to persistence layer
+	_ = PersistenceObj.SetConfig(ConfigObj)
+
 	err := RenderConfig(*haproxyConfigFile, *haproxyTemplateFile, ConfigObj)
 	if err != nil {
 		log.Err("Error rendering config file")
