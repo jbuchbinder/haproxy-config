@@ -13,9 +13,30 @@ type Config struct {
 
 // Defines a single haproxy "backend".
 type Backend struct {
-	HttpClose      bool                      `json:"httpClose"`
 	Name           string                    `json:"name"`
 	BackendServers map[string]*BackendServer `json:"servers"`
+	Options        ProxyOptions              `json:"options"`
+}
+
+// Options which are common between frontends, backends, etc
+type ProxyOptions struct {
+	AbortOnClose    bool `json:"abortOnClose"`
+	AllBackups      bool `json:"allBackups"`
+	CheckCache      bool `json:"checkCache"`
+	ForwardFor      bool `json:"forwardFor"`
+	HttpClose       bool `json:"httpClose"`
+	HttpCheck       bool `json:"httpCheck"`
+	LdapCheck       bool `json:"ldapCheck"`
+	MysqlCheck      bool `json:"mysqlCheck"`
+	PgsqlCheck      bool `json:"pgsqlCheck"`
+	RedisCheck      bool `json:"redisCheck"`
+	SmtpCheck       bool `json:"smtpCheck"`
+	SslHelloCheck   bool `json:"sslHelloCheck"`
+	TcpKeepAlive    bool `json:"tcpKeepAlive"`
+	TcpLog          bool `json:"tcpLog"`
+	TcpSmartAccept  bool `json:"tcpSmartAccept"`
+	TcpSmartConnect bool `json:"tcpSmartConnect"`
+	Transparent     bool `json:"transparent"`
 }
 
 // Defines a server which exists in a backend.
