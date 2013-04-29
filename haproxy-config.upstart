@@ -1,0 +1,15 @@
+# Upstart Configuration
+
+description     "Golang Web App"
+author          "Jeff Buchbinder"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+          
+stop on runlevel [016]
+
+respawn
+
+exec /usr/sbin/haproxy-config
+
