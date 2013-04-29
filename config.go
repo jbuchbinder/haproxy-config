@@ -8,7 +8,7 @@ import (
 // the templating engine.
 type Config struct {
 	Backends map[string]*Backend `json:"backends"`
-	Mutex    *sync.RWMutex
+	Mutex    *sync.RWMutex       `json:"-"`
 }
 
 // Defines a single haproxy "backend".

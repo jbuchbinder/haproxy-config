@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log/syslog"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -18,15 +17,26 @@ var (
 	haproxyConfigFile   = flag.String("haproxyConfig", "/etc/haproxy.cfg", "Configuration file for haproxy")
 	haproxyPidFile      = flag.String("haproxyPidFile", "/var/run/haproxy.pid", "Location of haproxy PID file")
 	haproxyTemplateFile = flag.String("template", "haproxy.cfg.template", "Template file to build haproxy config")
-	ConfigObj           Config
+	persistence         = flag.String("persist", "dummy", "Persistence plugin to use")
+	persistenceOpts     = flag.String("persistOpt", "", "Options to pass to the active persistence plugin")
+	ConfigObj           *Config
+	PersistenceObj      PersistenceLayer
 	log, _              = syslog.New(syslog.LOG_DEBUG, "haproxy-config")
 )
 
 func main() {
 	flag.Parse()
 
-	ConfigObj = Config{
-		Mutex: new(sync.RWMutex),
+	PersistenceObj = GetPersistenceLayer(*persistence)
+	if PersistenceObj == nil {
+		log.Err("Unable to load persistence plugin " + *persistence)
+		panic("Dying")
+	}
+	var err error
+	ConfigObj, err = PersistenceObj.GetConfig()
+	if err != nil {
+		log.Err("Unable to load config from persistence plugin " + *persistence)
+		panic("Dying")
 	}
 
 	r := mux.NewRouter()
@@ -55,7 +65,7 @@ func main() {
 
 // On configuration change, call this to reload config
 func configChangeHook() {
-	err := RenderConfig(*haproxyConfigFile, *haproxyTemplateFile, &ConfigObj)
+	err := RenderConfig(*haproxyConfigFile, *haproxyTemplateFile, ConfigObj)
 	if err != nil {
 		log.Err("Error rendering config file")
 		return
