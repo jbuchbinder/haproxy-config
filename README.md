@@ -15,7 +15,7 @@ HAproxy configuration.
 
 ## TODO
 
-* Persist configuration to NoSQL database (Redis).
+* ~~Persist configuration to NoSQL database (Memcache, plugins).~~
 * ~~Mutex locking of config object, since maps aren't thread safe.~~
 * jQuery-based UI.
 * Authentication layer/security, maybe ACLs?
