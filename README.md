@@ -19,4 +19,7 @@ HAproxy configuration.
 * ~~Mutex locking of config object, since maps aren't thread safe.~~
 * jQuery-based UI.
 * Authentication layer/security, maybe ACLs?
+* Implement global configuration
+* Implement frontend configuration
+* Finish implementing configuration for backend servers
 
