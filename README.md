@@ -6,6 +6,7 @@ HAproxy configuration.
 ## BUILDING
 
 	go get github.com/gorilla/mux
+	go get github.com/bradfitz/gomemcache/memcache
 	go build
 
 ## BUILD STATUS
