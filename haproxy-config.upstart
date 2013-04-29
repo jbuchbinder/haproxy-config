@@ -11,5 +11,8 @@ stop on runlevel [016]
 
 respawn
 
-exec /usr/sbin/haproxy-config
+pre-start script
+        [ -r /etc/default/haproxy-config ] && . /etc/default/haproxy-config
+	exec /usr/sbin/haproxy-config $HAPROXY_CONFIG_ARGS
+end script
 
