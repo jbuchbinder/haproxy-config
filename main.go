@@ -42,10 +42,11 @@ func main() {
 	r := mux.NewRouter()
 
 	// Define paths
-	sub := r.PathPrefix("/").Subrouter()
+	sub := r.PathPrefix("/api").Subrouter()
 
 	// Display handlers
-	sub.HandleFunc("/", configHandler)
+	sub.HandleFunc("/config", configHandler).Methods("GET")
+	sub.HandleFunc("/reload", configReloadHandler).Methods("GET")
 	sub.HandleFunc("/backend/{backend}", backendHandler).Methods("GET")
 	sub.HandleFunc("/backend/{backend}", backendAddHandler).Methods("POST")
 	sub.HandleFunc("/backend/{backend}", backendDeleteHandler).Methods("DELETE")
@@ -88,9 +89,22 @@ func configHandler(w http.ResponseWriter, r *http.Request) {
 	b, err := json.Marshal(ConfigObj)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "false")
 		return
 	}
 	fmt.Fprint(w, string(b))
+}
+
+func configReloadHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	var err error
+	ConfigObj, err = PersistenceObj.GetConfig()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "false")
+		return
+	}
+	fmt.Fprint(w, "true")
 }
 
 // Backend functions
