@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	auth "github.com/abbot/go-http-auth"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log/syslog"
@@ -17,6 +18,7 @@ var (
 	haproxyConfigFile   = flag.String("haproxyConfig", "/etc/haproxy.cfg", "Configuration file for haproxy")
 	haproxyPidFile      = flag.String("haproxyPidFile", "/var/run/haproxy.pid", "Location of haproxy PID file")
 	haproxyTemplateFile = flag.String("template", "haproxy.cfg.template", "Template file to build haproxy config")
+	htpasswd            = flag.String("htpasswd", "haproxy.htpasswd", "htpasswd-formatted authentication file")
 	persistence         = flag.String("persist", "dummy", "Persistence plugin to use")
 	persistenceOpts     = flag.String("persistOpt", "", "Options to pass to the active persistence plugin")
 	ConfigObj           *Config
@@ -60,7 +62,11 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	http.Handle("/", r)
+	h := auth.HtpasswdFileProvider(*htpasswd)
+	a := auth.NewBasicAuthenticator("haproxy config", h)
+	http.Handle("/", a.Wrap(func(w http.ResponseWriter, ar *auth.AuthenticatedRequest) {
+		r.ServeHTTP(w, &ar.Request)
+	}))
 	log.Err(s.ListenAndServe().Error())
 }
 
