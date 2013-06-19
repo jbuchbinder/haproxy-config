@@ -8,6 +8,7 @@ import (
 // the templating engine.
 type Config struct {
 	Backends map[string]*Backend `json:"backends"`
+	PidFile  string              `json:"pidfile"`
 	Mutex    *sync.RWMutex       `json:"-"`
 }
 

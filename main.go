@@ -41,6 +41,10 @@ func main() {
 		panic("Dying")
 	}
 
+	if ConfigObj.PidFile != *haproxyPidFile {
+		ConfigObj.PidFile = *haproxyPidFile
+	}
+
 	r := mux.NewRouter()
 
 	// Define paths
