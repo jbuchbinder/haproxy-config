@@ -1,0 +1,27 @@
+
+<script language="javascript">
+$('#backends').w2grid({
+	name    : 'backends',
+	columns: [				
+		{ field: 'name', caption: 'Backend Name', size: '50%' }
+	]
+});
+$(document).ready(function() {
+	$.getJSON( "../api/config", function( data ) {
+		$.each( data['backends'], function( index, value ) {
+			w2ui['backends'].add({
+				'recid': value['name'],
+				'name': value['name']
+			});
+		});
+	});
+});
+
+// Handle backend add function
+$('#backends-add').click(function() {
+	w2popup.load({ url: 'add-backend.html' });
+});
+</script>
+
+<div id="backends-add"><button>Add Backend</button</div>
+<div id="backends"></div>

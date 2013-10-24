@@ -1,0 +1,42 @@
+
+<link rel="Stylesheet" type="text/css" href="/ui/css/custom.css"></link>
+
+<script language="javascript">
+$(function () {
+	$('#addBackend').w2form({ 
+		name   : 'addBackend',
+		url    : '../api/backend/BACKEND', // FIXME
+		fields : [
+			{ name: 'Name', type: 'text', required: true },
+			{ name: 'AbortOnClose', type: 'checkbox' },
+			{ name: 'AllBackups', type: 'checkbox' },
+			{ name: 'CheckCache', type: 'checkbox' },
+			{ name: 'ForwardFor', type: 'checkbox' },
+			{ name: 'HttpClose', type: 'checkbox' },
+			{ name: 'HttpCheck', type: 'checkbox' },
+			{ name: 'LdapCheck', type: 'checkbox' },
+			{ name: 'MysqlCheck', type: 'checkbox' },
+			{ name: 'PgsqlCheck', type: 'checkbox' },
+			{ name: 'RedisCheck', type: 'checkbox' },
+			{ name: 'SmtpCheck', type: 'checkbox' },
+			{ name: 'SslHelloCheck', type: 'checkbox' },
+			{ name: 'TcpKeepAlive', type: 'checkbox' },
+			{ name: 'TcpLog', type: 'checkbox' },
+			{ name: 'TcpSmartAccept', type: 'checkbox' },
+			{ name: 'TcpSmartConnect', type: 'checkbox' },
+			{ name: 'Transparent', type: 'checkbox' }
+		],
+		actions: {
+			reset: function () {
+				this.clear();
+			},
+			save: function () {
+				this.save();
+			}
+		}
+	});
+});
+</script>
+
+<div id="addBackend"></div>
+

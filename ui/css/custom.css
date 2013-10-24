@@ -1,0 +1,15 @@
+
+#header h1 {
+	margin: 0px;
+}
+
+#footer a {
+	text-decoration: none;
+	color: #777;
+}
+
+// Fix form rendering issue
+input[type=checkbox] {
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+}

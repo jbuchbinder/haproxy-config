@@ -18,6 +18,7 @@ var (
 	htpasswd            = flag.String("htpasswd", "haproxy.htpasswd", "htpasswd-formatted authentication file")
 	persistence         = flag.String("persist", "dummy", "Persistence plugin to use")
 	persistenceOpts     = flag.String("persistOpt", "", "Options to pass to the active persistence plugin")
+	uiLocation          = flag.String("uilocation", "./ui", "Location of the UI")
 	ConfigObj           *Config
 	PersistenceObj      PersistenceLayer
 	log, _              = syslog.New(syslog.LOG_DEBUG, "haproxy-config")
@@ -46,6 +47,9 @@ func main() {
 
 	// Define paths
 	sub := r.PathPrefix("/api").Subrouter()
+
+	// Wire the UI (outside of muxer)
+	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(*uiLocation))))
 
 	// Display handlers
 	sub.HandleFunc("/config", configHandler).Methods("GET")
