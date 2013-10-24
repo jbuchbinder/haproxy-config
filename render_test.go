@@ -25,7 +25,7 @@ func TestRenderConfig(t *testing.T) {
 			},
 		},
 		PidFile: "/tmp/haproxy.pid",
-		Mutex: new(sync.RWMutex),
+		Mutex:   new(sync.RWMutex),
 	}
 	err := RenderConfig(outFile, template, config)
 	if err != nil {
