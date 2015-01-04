@@ -15,6 +15,8 @@ authorization for the API.
 
 [![Status](https://secure.travis-ci.org/jbuchbinder/haproxy-config.png)](http://travis-ci.org/jbuchbinder/haproxy-config)
 
+[![Gobuild Download](http://gobuild.io/badge/github.com/jbuchbinder/haproxy-config/downloads.svg)](http://gobuild.io/github.com/jbuchbinder/haproxy-config)
+
 ## TODO
 
 * ~~Persist configuration to NoSQL database (Memcache, plugins).~~
